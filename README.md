@@ -1,5 +1,4 @@
 # Full-Stack FitMetrics Web App
-//
 A production-ready, high-performance fitness tracking platform built with Next.js 14, TypeScript, Tailwind CSS, and MongoDB.
 
 ## 🚀 Features
