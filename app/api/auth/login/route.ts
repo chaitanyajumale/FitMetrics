@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { signToken, createAuthCookie } from '@/lib/auth';
@@ -16,7 +17,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Select password field explicitly as it's excluded by default
     const user = await User.findOne({ email }).select('+password').lean();
 
     if (!user) {
@@ -26,8 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userDoc = await User.findById(user._id);
-    const isPasswordValid = await userDoc.comparePassword(password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return NextResponse.json(

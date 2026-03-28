@@ -44,11 +44,11 @@ const UserSchema = new Schema<IUser>(
     timestamps: true,
     // Optimize queries by only returning needed fields
     toJSON: {
-      transform: function(doc, ret) {
-        delete ret.password;
-        return ret;
-      }
-    }
+      transform: function (_doc, ret) {
+        const { password: _pw, ...safe } = ret as typeof ret & { password?: string };
+        return safe;
+      },
+    },
   }
 );
 

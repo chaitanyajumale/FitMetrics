@@ -151,7 +151,7 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-600">Keep up the great work! You're doing well.</p>
+              <p className="text-gray-600">Keep up the great work! You&apos;re doing well.</p>
             )}
           </div>
 

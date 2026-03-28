@@ -8,10 +8,6 @@ const nextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
   },
-  // Enable caching
-  experimental: {
-    optimizeCss: true,
-  },
   // Optimize bundle
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
