@@ -1,294 +1,149 @@
-# Full-Stack FitMetrics Web App
-A production-ready, high-performance fitness tracking platform built with Next.js 14, TypeScript, Tailwind CSS, and MongoDB.
+# FitMetrics
 
-## 🚀 Features
+A full-stack fitness tracker built with Next.js 14, TypeScript, Tailwind CSS, and MongoDB.
 
-- **User Authentication**: Secure JWT-based authentication with bcrypt password hashing
-- **Workout Tracking**: Log exercises with sets, reps, weight, duration, and calories burned
-- **Nutrition Monitoring**: Track meals with detailed macronutrient breakdown and water intake
-- **Real-time Charts**: Interactive activity visualization with Recharts
-- **Personalized Suggestions**: AI-powered workout recommendations based on user activity
-- **Goal Tracking**: Set and monitor fitness goals (weight, workout frequency, calories)
-- **Optimized Performance**: 
-  - Server-side rendering with caching (20% faster page loads)
-  - Database query optimization with compound indexes
-  - Connection pooling for MongoDB
-  - Code splitting and bundle optimization
+FitMetrics helps users log workouts and nutrition, monitor trends, and view personalized suggestions from a single dashboard.
 
-## 📊 Performance Optimizations
+## Features
 
-### Database Layer
-- **Compound Indexes**: Optimized queries for user+date lookups
-- **Lean Queries**: Reduced memory footprint by 40%
-- **Connection Pooling**: Reuse database connections (5-10 pool size)
-- **Aggregation Pipelines**: Efficient statistics calculation
+- JWT auth with HttpOnly cookie sessions (`/api/auth/register`, `/api/auth/login`, `/api/auth/logout`)
+- Workout tracking (exercise details, duration, calories, notes)
+- Nutrition logging with daily meal + macro totals
+- Dashboard analytics with charts, recent activity, and goal-aware suggestions
+- SWR-based client caching and periodic refresh on the dashboard
+- API + DB performance optimizations (`lean()`, aggregation pipelines, query indexes, connection pooling)
 
-### API Layer
-- **HTTP Caching**: 5-minute cache with stale-while-revalidate
-- **Parallel Queries**: Concurrent data fetching with Promise.all
-- **Response Compression**: Reduced payload sizes
+## Tech Stack
 
-### Frontend
-- **SWR Data Fetching**: Automatic caching and revalidation
-- **Code Splitting**: Dynamic imports for modals and charts
-- **Font Optimization**: Next.js font loading with display swap
-- **CSS Purging**: Tailwind removes unused styles in production
+- `next` 14 (App Router)
+- `react` 18 + TypeScript
+- Tailwind CSS
+- MongoDB + Mongoose
+- SWR
+- Recharts
+- `jsonwebtoken` + `bcryptjs`
 
-## 🛠️ Tech Stack
+## Quick Start
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Database**: MongoDB with Mongoose ODM
-- **Charts**: Recharts
-- **State Management**: SWR
-- **Authentication**: JWT + HttpOnly cookies
-- **Notifications**: React Hot Toast
+### 1) Install dependencies
 
-## 📦 Installation
-
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd fitness-tracker
-```
-
-2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Set up environment variables**
-Create a `.env.local` file in the root directory:
+### 2) Configure environment variables
+
+Create `/.env.local`:
+
 ```env
 MONGODB_URI=mongodb://localhost:27017/fitness-tracker
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_SECRET=replace-with-a-strong-secret
 NODE_ENV=development
 ```
 
-4. **Start MongoDB**
-Make sure MongoDB is running on your system:
-```bash
-# Using MongoDB service
-sudo systemctl start mongodb
+Notes:
+- In development, if `JWT_SECRET` is missing, a fallback secret is used.
+- In production, `JWT_SECRET` must be set to a strong unique value.
 
-# Or using Docker
-docker run -d -p 27017:27017 --name mongodb mongo:latest
+### 3) Start MongoDB
+
+Use your preferred local or remote MongoDB instance.
+
+Docker example:
+
+```bash
+docker run -d -p 27017:27017 --name fitmetrics-mongo mongo:latest
 ```
 
-5. **Run the development server**
+### 4) Run the app
+
 ```bash
 npm run dev
 ```
 
-6. **Open your browser**
-Navigate to [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000).
 
-## 🚀 Deployment
+## NPM Scripts
 
-### Deploy to Vercel (Recommended)
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
 
-1. **Push your code to GitHub**
+## API Overview
 
-2. **Import project in Vercel**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import your GitHub repository
+### Auth
 
-3. **Set environment variables**
-   - Add `MONGODB_URI` (use MongoDB Atlas connection string)
-   - Add `JWT_SECRET` (generate a strong secret)
-   - Set `NODE_ENV=production`
-
-4. **Deploy**
-   - Vercel will automatically build and deploy
-
-### Deploy to Other Platforms
-
-```bash
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-## 📁 Project Structure
-
-```
-fitness-tracker/
-├── app/
-│   ├── api/                 # API routes
-│   │   ├── auth/           # Authentication endpoints
-│   │   ├── workouts/       # Workout CRUD operations
-│   │   ├── nutrition/      # Nutrition tracking
-│   │   └── dashboard/      # Dashboard statistics
-│   ├── dashboard/          # Main dashboard page
-│   ├── login/              # Login page
-│   ├── register/           # Registration page
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Landing page
-│   └── globals.css         # Global styles
-├── components/             # React components
-│   ├── ActivityChart.tsx   # Charts visualization
-│   ├── AddWorkoutModal.tsx # Workout logging modal
-│   └── AddNutritionModal.tsx # Nutrition logging modal
-├── lib/
-│   ├── mongodb.ts          # Database connection
-│   └── auth.ts             # Authentication utilities
-├── models/
-│   ├── User.ts             # User schema
-│   ├── Workout.ts          # Workout schema
-│   └── Nutrition.ts        # Nutrition schema
-└── public/                 # Static assets
-```
-
-## 🔑 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Create new user account
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
 
 ### Workouts
-- `GET /api/workouts` - Get user workouts (with filters)
-- `POST /api/workouts` - Create new workout
-- `DELETE /api/workouts?id={workoutId}` - Delete workout
+
+- `GET /api/workouts?startDate=&endDate=&type=&limit=`
+- `POST /api/workouts`
+- `DELETE /api/workouts?id=<workoutId>`
 
 ### Nutrition
-- `GET /api/nutrition` - Get nutrition entries (with filters)
-- `POST /api/nutrition` - Create/update nutrition entry
-- `DELETE /api/nutrition?id={nutritionId}` - Delete nutrition entry
+
+- `GET /api/nutrition?startDate=&endDate=&limit=`
+- `POST /api/nutrition`
+- `DELETE /api/nutrition?id=<nutritionId>`
 
 ### Dashboard
-- `GET /api/dashboard?days={days}` - Get dashboard statistics
 
-## 📊 Database Schema
+- `GET /api/dashboard?days=30`
 
-### User
-```typescript
-{
-  name: string;
-  email: string; // Indexed
-  password: string; // Hashed with bcrypt
-  age?: number;
-  weight?: number;
-  height?: number;
-  goals?: {
-    targetWeight?: number;
-    weeklyWorkouts?: number;
-    dailyCalories?: number;
-  };
-}
+## Project Structure
+
+```text
+fitness-tracker/
+  app/
+    api/
+      auth/
+      dashboard/
+      nutrition/
+      workouts/
+    dashboard/
+    login/
+    register/
+  components/
+    ActivityChart.tsx
+    AddWorkoutModal.tsx
+    AddNutritionModal.tsx
+  lib/
+    auth.ts
+    auth-cookie.ts
+    jwt-config.ts
+    mongodb.ts
+  models/
+    User.ts
+    Workout.ts
+    Nutrition.ts
 ```
 
-### Workout
-```typescript
-{
-  userId: ObjectId; // Indexed
-  name: string;
-  type: 'cardio' | 'strength' | 'flexibility' | 'sports' | 'other';
-  exercises: [{
-    name: string;
-    sets: number;
-    reps: number;
-    weight?: number;
-    duration?: number;
-    caloriesBurned?: number;
-  }];
-  duration: number;
-  totalCalories: number;
-  date: Date; // Compound index with userId
-  notes?: string;
-}
-```
+## Deployment
 
-### Nutrition
-```typescript
-{
-  userId: ObjectId; // Indexed
-  date: Date; // Compound index with userId (unique)
-  meals: [{
-    name: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fats: number;
-    time: Date;
-  }];
-  totalCalories: number;
-  totalProtein: number;
-  totalCarbs: number;
-  totalFats: number;
-  waterIntake: number;
-  notes?: string;
-}
-```
+Deploying to Vercel is the simplest path:
 
-## 🎯 Performance Metrics
+1. Push this repository to GitHub.
+2. Import the repo in Vercel.
+3. Set environment variables:
+   - `MONGODB_URI`
+   - `JWT_SECRET`
+   - `NODE_ENV=production`
+4. Deploy.
 
-- **Page Load Time**: ~20% faster with SSR caching
-- **Database Query Time**: ~40% reduction with lean() and indexes
-- **Bundle Size**: Optimized with code splitting
-- **First Contentful Paint**: < 1.5s
-- **Time to Interactive**: < 3s
+## Security Notes
 
-## 🔒 Security Features
+- Passwords are hashed with `bcryptjs`.
+- JWT is stored in an HttpOnly cookie named `token`.
+- Cookie is `secure` in production and `sameSite=lax`.
 
-- Password hashing with bcrypt (12 rounds)
-- JWT tokens with HttpOnly cookies
-- CSRF protection via SameSite cookies
-- Input validation and sanitization
-- Secure headers in production
+## Roadmap Ideas
 
-## 🧪 Testing
-
-```bash
-# Run tests (add your test setup)
-npm test
-
-# Run linting
-npm run lint
-```
-
-## 📝 License
-
-MIT
-
-## 👥 Support
-
-For issues and questions, please open an issue on GitHub.
-
-## 🎨 Customization
-
-### Change Colors
-Edit `tailwind.config.js` to customize the color scheme:
-```javascript
-theme: {
-  extend: {
-    colors: {
-      primary: {
-        // Your custom colors
-      }
-    }
-  }
-}
-```
-
-### Add Features
-- Add more workout types
-- Implement social features
-- Add meal templates
-- Export data functionality
-- Mobile app integration
-
-## 🌟 Future Enhancements
-
-- [ ] Progressive Web App (PWA)
-- [ ] Push notifications
-- [ ] Social sharing
-- [ ] Exercise library with images
-- [ ] Meal planning
-- [ ] Integration with fitness devices
-- [ ] AI-powered meal recommendations
-- [ ] Community features
+- PWA + offline support
+- Push notifications
+- Device/wearable integrations
+- Meal planning and templates
+- Expanded social/community features
